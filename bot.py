@@ -42,16 +42,16 @@ def get_contact_info():
     TODO Write Doc
     """
 
-    # get ilug page html
-    r = req.get(ilugurl)
+    # get ilug contact us page 
+    r = req.get('http://www.isfahanlug.org/doku.php?id=%D8%AA%D9%85%D8%A7%D8%B3_%D8%A8%D8%A7_%D9%85%D8%A7')
 
     if r.ok:
         # get groups' this week session
         r.encoding = 'utf-8'
         source_code = BeautifulSoup(r.text, 'html.parser')
-        contact_info = source_code.find('div', 'channel')
+        contact_info = source_code.find('p',class_='divalign-left').text
 
-        return [contact_info.get_text().encode('utf8')]
+        return [contact_info]
     # TODO else
 
 
