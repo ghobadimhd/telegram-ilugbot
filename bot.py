@@ -18,12 +18,22 @@ def get_upcoming():
         # get groups' this week session
         r.encoding = 'utf-8'
         source_code = BeautifulSoup(r.text, 'html.parser')
-        main_group = source_code.find(id='main-group')
-        sub_groups = source_code.find(id='sub-groups')
+        divs = source_code.find_all('div',class_='col-md-6')
+        upcoming = divs[0].text
+        # removing extra lines 
+        content = []
+        count_lines = 0
+        for line in upcoming.splitlines():
+            if line.strip() :
+                if count_lines > 0 :
+                    content.append('\n')
+                    count_lines =0
+                content.append(line)
+            else:
+                count_lines += 1 
+        upcoming = ''.join(content)
 
-        # print [main_group.get_text().encode('utf8'), sub_groups.get_text().encode('utf8')]
-
-        return [main_group.get_text().encode('utf8'), sub_groups.get_text().encode('utf8')]
+        return [upcoming]
     # TODO else
 
 
