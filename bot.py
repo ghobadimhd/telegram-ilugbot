@@ -120,4 +120,4 @@ if __name__ == '__main__':
                     for message in command['func']():
                         bot.sendMessage(chat_id=update.message.chat.id, text=message)
                     break
-            sleep(3)
+        sleep(3)
