@@ -4,7 +4,18 @@ from bs4 import BeautifulSoup
 import requests as req
 from time import sleep
 import re
+import xml.etree.ElementTree as ET 
 
+def get_mybb_feed(feed_link):
+    r = req.get(feed_link)
+    if r.ok :
+        feed = r.content
+        items = ET.fromstring(feed).find('channel').findall('item')
+        feeds_str = ""
+        for i in items :
+            feeds_str += i.find('title').text + "\n"
+            feeds_str += i.find('link').text + "\n\n"
+    return feeds_str
 
 def get_upcoming():
     """
@@ -59,40 +70,7 @@ def get_news():
     """
     TODO Write Doc
     """
-
-    # get ilug page html
-    news_url = 'http://lists.isfahanlug.org/pipermail/news/'
-    r = req.get(news_url)
-
-    if r.ok:
-        # get groups' this week session
-        r.encoding = 'utf-8'
-        source_code = BeautifulSoup(r.text, 'html.parser')
-
-        # Find last month in the table (sorted in date)
-        last_month_url = news_url + source_code.find_all('a', href=re.compile(r'^.*/date.html'))[0]['href']
-
-        r = req.get(last_month_url)
-
-        if r.ok:
-            # get groups' this week session
-            r.encoding = 'utf-8'
-            source_code = BeautifulSoup(r.text, 'html.parser')
-            ul = source_code.find_all('ul')[1]
-            ul = re.sub(r'</i>\n(</li>)*</ul>', r'</i></ul>', ul.encode())
-            ul = ul.replace('<li>', '</li><li>')
-            ul = ul.replace('<ul>\n</li>', '<ul>')
-
-            source_code = BeautifulSoup(ul, 'html.parser')
-            last_ten_news = source_code.find_all('li')[-10:]
-            last_ten_news.reverse()
-
-            result = []
-            for news in last_ten_news:
-                result.append((news.get_text() + '\n\n' + last_month_url.replace('date.html', '') + news.find('a')['href'] + '\n\n')
-                              .encode('utf-8'))
-
-            return result
+    return [get_mybb_feed(open('news-feed.link').readline()) ]
     # TODO else
 
 if __name__ == '__main__':
