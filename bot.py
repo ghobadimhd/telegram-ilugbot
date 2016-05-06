@@ -1,4 +1,5 @@
 import os
+import sys
 import telegram
 from bs4 import BeautifulSoup
 import requests as req
@@ -117,7 +118,10 @@ if __name__ == '__main__':
             print update
             for command in commands:
                 if re.search(command['match'], update.message.text):
-                    for message in command['func']():
-                        bot.sendMessage(chat_id=update.message.chat.id, text=message)
+                    try:
+                       for message in command['func']():
+                           bot.sendMessage(chat_id=update.message.chat.id, text=message)
+                    except :
+                        print "Unexpected error:", sys.exc_info()[0]
                     break
         sleep(3)
