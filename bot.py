@@ -54,7 +54,7 @@ def get_contact_info():
     """
 
     # get ilug contact us page 
-    r = req.get('http://www.isfahanlug.org/doku.php?id=%D8%AA%D9%85%D8%A7%D8%B3_%D8%A8%D8%A7_%D9%85%D8%A7')
+    r = req.get(open('contact-us.link').readline())
 
     if r.ok:
         # get groups' this week session
@@ -78,7 +78,7 @@ if __name__ == '__main__':
     # assign bot and ilug url
     global bot, ilugurl
     bot = telegram.Bot(token=open('ilugbot.token').read())
-    ilugurl = 'http://drupal.isfahanlug.org/'
+    ilugurl = open('ilug-url.link').readline()
 
     # Assign Commands
     commands = [
